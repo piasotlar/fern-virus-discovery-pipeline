@@ -10,7 +10,7 @@ rule trimming:
         r1_unpaired = "results/{sample}/{sample}_1U.fq.gz",
         r2_unpaired = "results/{sample}/{sample}_2U.fq.gz"
     conda:
-        "envs/trimmomatic.yaml"
+        "../envs/trimmomatic.yaml"
     log:
         "logs/trimming/{sample}.log"
     threads: 4

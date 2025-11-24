@@ -1,10 +1,27 @@
 import pandas as pd
 
-samples = pd.read_csv("config/samples.tsv", sep="\t")
+configfile: "config/config.yaml"
+
+samples = pd.read_csv(config["samples_tsv"], sep="\t")
 sample_names = samples["sample"].tolist() #dobimo seznam imen samplov
 
 r1_urls = dict(zip(samples["sample"], samples["r1"])) #dict imenov samplov in url-jev za forward reade
 r2_urls = dict(zip(samples["sample"], samples["r2"])) #dict imenov samplov in url-jev za reverse reade
+
+include: "workflow/rules/download.smk"
+include: "workflow/rules/trim.smk"
+include: "workflow/rules/spades.smk"
+
+#mmseqs2
+include: "workflow/rules/create_db.smk" #še za narest
+include: "workflow/rules/fasta_to_db.smk"
+include: "workflow/rules/mmseqs2_taxonomy.smk"
+include: "workflow/rules/to_tsv.smk"
+
+
+rule all:
+    input:
+        expand("results/{sample}/taxonomy/{sample}_viruses.tsv", sample=sample_names)
 
 
   

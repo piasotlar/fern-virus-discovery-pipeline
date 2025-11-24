@@ -1,16 +1,17 @@
 rule mmseqs2_taxonomy:
     input:
         query_db = "results/{sample}/db/{sample}_db",
-        target_db = "PATH/TO/TARGET_DB"  # še dodamo target db
+        seqTaxDB = "PATH/TO/TARGET_DB"  # še dodamo target db
     output:
-        tmp = temp("results/{sample}/{sample}_taxonomy_tmp"),  #tmp za temporary files od searcha (se zbriše potem), mogoče drugače za HPC?
-        result = "results/{sample}/{sample}_taxonomy_result"
+        tmp = temp("tmp/{sample}_taxonomy_tmp"),  #tmp za temporary files od taxonomy (se zbriše potem), mogoče drugače za HPC?
+        taxonomy_result = "results/{sample}/taxonomy/{sample}_taxonomy" #ali se mapa taxonomy sama ustvari ob pravilu mmseq
     conda:
-        "envs/mmseqs2.yaml"
+        "../envs/mmseqs2.yaml"
     log:
         "logs/mmseqs2/taxonomy/{sample}.log"
-    threads: 8
+    threads: 16
     shell:
         """
-        mmseqs search {input.query_db} {input.target_db} {output.result} {output.tmp} --threads {threads} &>> {log}
+        mkdir -p results/{wildcards.sample}/taxonomy
+        mmseqs taxonomy {input.query_db} {input.seqTaxDB} {output.taxonomy_result} {output.tmp} &>> {log}
         """

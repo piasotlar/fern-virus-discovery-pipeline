@@ -6,7 +6,7 @@ rule spades_assembly:
         contigs_dir = directory("results/{sample}/spades"),
         contigs = "results/{sample}/spades/contigs.fasta"
     conda:
-        "envs/spades.yaml" #env za spades
+        "../envs/spades.yaml" #env za spades
     log:
         "logs/spades/{sample}.log" #logi od spades, vsak vzorec svoj log
     threads: 12
