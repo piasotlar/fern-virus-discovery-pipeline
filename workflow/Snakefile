@@ -1,0 +1,10 @@
+import pandas as pd
+
+samples = pd.read_csv("config/samples.tsv", sep="\t")
+sample_names = samples["sample"].tolist() #dobimo seznam imen samplov
+
+r1_urls = dict(zip(samples["sample"], samples["r1"])) #dict imenov samplov in url-jev za forward reade
+r2_urls = dict(zip(samples["sample"], samples["r2"])) #dict imenov samplov in url-jev za reverse reade
+
+
+  
