@@ -1,14 +1,14 @@
 rule spades_assembly:
     input:
         r1_paired = "results/{sample}/{sample}_1P.fq.gz",
-        r2_paired = "results/{sample}/{sample}_2P.fq.gz" #je tukaj prav da so samo paired?
+        r2_paired = "results/{sample}/{sample}_2P.fq.gz" 
     output:
         contigs_dir = directory("results/{sample}/spades"),
         contigs = "results/{sample}/spades/contigs.fasta"
     conda:
-        "../envs/spades.yaml" #env za spades
+        "../envs/spades.yaml" 
     log:
-        "logs/spades/{sample}.log" #logi od spades, vsak vzorec svoj log
+        "logs/spades/{sample}.log" 
     threads: 12
 
     shell:
