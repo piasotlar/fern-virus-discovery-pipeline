@@ -15,4 +15,4 @@ rule download_fastq:
         wget -nc ftp://{params.url_r2} -O {output.r2} $>> {log}
         """
 
-        # &>>{log} :  out in err v isti log zapiše
+        # &>>{log} :  zapiše out in err v isti log 

@@ -2,7 +2,7 @@ rule trimming:
     input:
         r1 = "resources/fastq/{sample}_R1.fastq.gz",
         r2 = "resources/fastq/{sample}_R2.fastq.gz",
-        adapters = "resources/adapters/truseq_UDI.fa"
+        adapters = "resources/adapters/truseq_UDI.fa" #ali so okej adapterji - v trimmomatic data je na vsakem še en dodatn nt? + ali je potrebno dat v imena adapterjev /1 in /2?
 
     output:
         r1_paired = "results/{sample}/{sample}_1P.fq.gz",
