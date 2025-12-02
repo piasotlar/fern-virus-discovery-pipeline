@@ -8,7 +8,7 @@ rule spades_assembly:
     conda:
         "../envs/spades.yaml" 
     log:
-        "logs/spades/{sample}.log" 
+        "../logs/spades/{sample}.log" 
     threads: 12
 
     shell:

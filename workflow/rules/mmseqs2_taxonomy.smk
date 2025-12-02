@@ -1,6 +1,6 @@
 rule mmseqs2_taxonomy:
     input:
-        seqTaxDB = "PATH/TO/TARGET_DB"  # še dodamo target db
+        seqTaxDB = "../resources/db" # še dodamo target db
     output:
         tmp = temp(directory("tmp/{sample}_taxonomy_tmp")),  #tmp za temporary files od taxonomy (se zbriše potem)
         resultsDB = "results/{sample}/{sample}_resultDB.index"
@@ -10,7 +10,7 @@ rule mmseqs2_taxonomy:
     conda:
         "../envs/mmseqs2.yaml"
     log:
-        "logs/mmseqs2/taxonomy/{sample}.log"
+        "../logs/mmseqs2/taxonomy/{sample}.log"
 
     threads: 16
     shell:

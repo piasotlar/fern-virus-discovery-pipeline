@@ -1,6 +1,6 @@
 rule to_tsv:
     input:
-        resultDB = "results/{sample}/{sample}_resultDB.index"
+        resultDB = "results/{sample}/{sample}_resultDB.index",
         queryDB = "results/{sample}/{sample}_queryDB.index"
 
     params:
@@ -11,7 +11,7 @@ rule to_tsv:
     conda:
         "../envs/mmseqs2.yaml"
     log:
-        "logs/mmseqs2/to_tsv/{sample}.log"
+        "../logs/mmseqs2/to_tsv/{sample}.log"
     shell:
         """
         mmseqs createtsv {params.query} {params.result} {output.tsv_result} &>> {log}

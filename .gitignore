@@ -1,4 +1,2 @@
 .snakemake
-results/** 
-logs/**
-resources/** 
+resources/fastq/*.fastq.gz
