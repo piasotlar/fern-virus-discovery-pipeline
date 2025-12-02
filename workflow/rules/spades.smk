@@ -3,8 +3,8 @@ rule spades_assembly:
         r1_paired = "results/{sample}/{sample}_1P.fq.gz",
         r2_paired = "results/{sample}/{sample}_2P.fq.gz" 
     output:
-        contigs_dir = directory("results/{sample}/spades"),
-        contigs = "results/{sample}/spades/contigs.fasta"
+        contigs_dir = temp(directory("results/{sample}/spades")),
+        contigs = "results/{sample}/{sample}_spades_contigs.fasta"
     conda:
         "../envs/spades.yaml" 
     log:
@@ -13,5 +13,7 @@ rule spades_assembly:
 
     shell:
         """
-        spades.py --rnaviral --pe1-1 {input.r1_paired} --pe1-2 {input.r2_paired} --threads {threads} -o {output.contigs_dir}  &>> {log} 
+        spades.py --rnaviral -1 {input.r1_paired} -2 {input.r2_paired} --threads {threads} -o {output.contigs_dir}  &>> {log} 
+
+        cp {output.contigs_dir}/contigs.fasta {output.contigs}
         """

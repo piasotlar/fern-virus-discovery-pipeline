@@ -13,7 +13,7 @@ rule trimming:
         "../envs/trimmomatic.yaml"
     log:
         "logs/trimming/{sample}.log"
-    threads: 4
+    threads: 10
     shell:
         """
         mkdir -p results/{wildcards.sample}

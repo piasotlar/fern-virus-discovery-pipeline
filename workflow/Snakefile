@@ -13,7 +13,6 @@ include: "workflow/rules/trim.smk"
 include: "workflow/rules/spades.smk"
 
 #mmseqs2
-include: "workflow/rules/create_db.smk" #še za narest
 include: "workflow/rules/fasta_to_db.smk"
 include: "workflow/rules/mmseqs2_taxonomy.smk"
 include: "workflow/rules/to_tsv.smk"
