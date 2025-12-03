@@ -1,17 +1,18 @@
 rule download_fastq:
     output:
-        r1="../resources/fastq/{sample}_R1.fastq.gz",
-        r2="../resources/fastq/{sample}_R2.fastq.gz"
-    params:
-        url_r1 = lambda w: r1_urls[w.sample],
-        url_r2 = lambda w: r2_urls[w.sample]
+        r1="../resources/fastq/{sample}_1.fastq",
+        r2="../resources/fastq/{sample}_2.fastq"
     log:
         "../logs/download/{sample}.log"
+
+    conda:
+        "../envs/download.yaml"
+
+    threads: 4
     shell:
         """
-        
-        wget -nc ftp://{params.url_r1} -O {output.r1} &>> {log}
+        prefetch {wildcards.sample} >> {log}
 
-        wget -nc ftp://{params.url_r2} -O {output.r2} &>> {log}
+        fasterq-dump {wildcards.sample} --split-files --outdir ../resources/fastq >> {log}
         """
 

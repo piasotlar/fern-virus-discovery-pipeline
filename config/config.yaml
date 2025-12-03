@@ -1,1 +1,2 @@
-samples_tsv: "../config/samples.tsv"
+#samples_tsv: "../config/sample_names.tsv"
+samples_tsv: "../config/test_sample1.tsv"

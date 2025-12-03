@@ -3,23 +3,22 @@ import pandas as pd
 configfile: "../config/config.yaml"
 
 samples = pd.read_csv(config["samples_tsv"], sep="\t")
-sample_names = samples["sample"].tolist() #dobimo seznam imen samplov
-
-r1_urls = dict(zip(samples["sample"], samples["r1"])) #dict imenov samplov in url-jev za forward reade
-r2_urls = dict(zip(samples["sample"], samples["r2"])) #dict imenov samplov in url-jev za reverse reade
+sample_names = samples["sample"].tolist()
 
 include: "rules/download.smk"
-include: "rules/trim.smk"
-include: "rules/spades.smk"
+# include: "rules/trim.smk"
+# include: "rules/spades.smk"
 
-include: "rules/fasta_to_db.smk"
-include: "rules/mmseqs2_taxonomy.smk"
-include: "rules/to_tsv.smk"
+# include: "rules/fasta_to_db.smk"
+# include: "rules/mmseqs2_taxonomy.smk"
+# include: "rules/to_tsv.smk"
 
 
 rule all:
     input:
-        expand("results/{sample}/{sample}_taxonomy.tsv", sample=sample_names)
+        #expand("results/{sample}/{sample}_taxonomy.tsv", sample=sample_names)
+        expand("../resources/fastq/{sample}_1.fastq", sample=sample_names),
+        expand("../resources/fastq/{sample}_2.fastq", sample=sample_names)
 
 
   

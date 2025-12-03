@@ -1,7 +1,7 @@
 rule trimming:
     input:
-        r1 = "../resources/fastq/{sample}_R1.fastq.gz",
-        r2 = "../resources/fastq/{sample}_R2.fastq.gz",
+        r1 = "../resources/fastq/{sample}_1.fastq",
+        r2 = "../resources/fastq/{sample}_2.fastq",
         adapters = "../resources/adapters/truseq_UDI.fa" #ali so okej adapterji - v trimmomatic data je na vsakem še en dodatn nt? + ali je potrebno dat v imena adapterjev /1 in /2?
 
     output:
