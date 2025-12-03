@@ -6,6 +6,6 @@ rule filter_tsv:
     conda:
         "../envs/filter.yaml"
     log:
-        "logs/filter/{sample}.log"
+        "../logs/filter/{sample}.log"
     script:
         "../scripts/filter.py"
