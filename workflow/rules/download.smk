@@ -11,8 +11,11 @@ rule download_fastq:
     threads: 4
     shell:
         """
-        prefetch {wildcards.sample} >> {log}
+	mkdir -p ../resources/fastq
 
-        fasterq-dump {wildcards.sample} --split-files --outdir ../resources/fastq >> {log}
+        prefetch --output-directory ../resources/fastq {wildcards.sample} >> {log}
+
+        fasterq-dump ../resources/fastq/{wildcards.sample}/{wildcards.sample}.sra --outdir ../resources/fastq >> {log}
+
+	rm -rf ../resources/fastq/{wildcards.sample}
         """
-
