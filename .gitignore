@@ -1,2 +1,2 @@
 .snakemake
-resources/fastq/*.fastq.gz
+
