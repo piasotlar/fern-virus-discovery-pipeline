@@ -16,14 +16,12 @@ include: "rules/filter.smk"
 
 #clustering
 include: "rules/clustering/filter_fasta.smk"
-include: "rules/clustering/concatenate_fasta.smk"
 include: "rules/clustering/make_blast_db.smk"
 include: "rules/clustering/blastn.smk"
 include: "rules/clustering/process_blast.smk"
 include: "rules/clustering/sort_blast.smk"
 include: "rules/clustering/anicalc.smk"
 include: "rules/clustering/aniclust.smk"
-include: "rules/clustering/concatenate_tsv.smk"
 include: "rules/clustering/reps.smk"
 
 
@@ -35,8 +33,8 @@ rule all:
         #expand("../results/{sample}/{sample}_taxonomy_filtered.tsv", sample=sample_names)
         expand("../results/{sample}/{sample}_virus_contigs.fasta", sample=sample_names),
         expand("../results/test_results/{sample}_taxonomy_filtered.tsv", sample=sample_names),
-        "../results/clustering/representatives.tsv",
-        "../results/clustering/representatives.fasta"
+        expand("../results/{sample}/{sample}_representatives.tsv", sample=sample_names),
+        expand("../results/{sample}/{sample}_representatives.fasta", sample=sample_names)
         #expand("../resources/fastq/{sample}_1.fastq", sample=sample_names),
         #expand("../resources/fastq/{sample}_2.fastq", sample=sample_names)
 

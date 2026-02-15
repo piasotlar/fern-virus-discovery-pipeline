@@ -1,13 +1,14 @@
 rule get_cluster_representatives:
     input:
-        clusters = "../results/clustering/clusters.tsv",
-        contigs = "../results/clustering/all_virus_contigs.fasta",
-        tsv = "../results/clustering/all_viruses.tsv" #spremeni potem v {sample}
+        clusters = "../results/{sample}/{sample}_clusters.tsv",
+        contigs = "../results/{sample}/{sample}_virus_contigs.fasta",
+        tsv = "../results/{sample}/{sample}_taxonomy_filtered.tsv"
     output:
-        reps_tsv = "../results/clustering/representatives.tsv",
-        reps_fasta = "../results/clustering/representatives.fasta"
+        reps_tsv = "../results/{sample}/{sample}_representatives.tsv",
+        reps_fasta = "../results/{sample}/{sample}_representatives.fasta"
     params:
-        min_length = 500
+        min_length = 500,
+        max_length = 25000
     conda:
         "../../envs/reps.yaml"
     script: "../../scripts/get_cluster_representatives.py"

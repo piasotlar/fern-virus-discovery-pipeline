@@ -1,6 +1,6 @@
 rule sort_blast:
-    input: "../results/clustering/all_samples_blast_processed.tsv"
-    output: "../results/clustering/all_samples_blast_sorted.tsv"
+    input: "../results/{sample}/{sample}_blast_processed.tsv"
+    output: "../results/{sample}/{sample}_blast_sorted.tsv"
     conda: "../../envs/sort_blast.yaml"
     shell:
         """

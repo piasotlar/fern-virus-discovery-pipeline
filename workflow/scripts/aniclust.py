@@ -173,6 +173,12 @@ def pick_resolution(
 
 
 ani_graph = build_graph(snakemake.input.ANI, snakemake.input.FASTA)
+if ani_graph.ecount() == 0:
+    with open(snakemake.output[0], "w") as fout:
+        for v in ani_graph.vs:
+            name = v["name"]
+            fout.write(name + "\t" + name + "\n")
+    raise SystemExit(0)
 if snakemake.params.leiden_resolution == "auto":
     leiden_resolution = pick_resolution(ani_graph)
 else:

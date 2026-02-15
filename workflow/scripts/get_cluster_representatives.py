@@ -21,11 +21,11 @@ def extract_length_from_id(seq_id: str):
     except ValueError:
         return None
     
-def filter_reps(reps, len_threshold):
+def filter_reps(reps, min, max):
     kept = []
     for rep in reps:
         L = extract_length_from_id(rep)
-        if L is None or L >= int(len_threshold):
+        if L is None or L >= int(min) or L <= int(max):
             kept.append(rep)
     return kept
 
@@ -64,7 +64,7 @@ def main():
     fasta_reps = snakemake.output.reps_fasta
 
     reps = get_representatives(clusters_fasta)
-    filtered_reps = filter_reps(reps, snakemake.params.min_length)
+    filtered_reps = filter_reps(reps, snakemake.params.min_length, snakemake.params.max_length)
     write_representatives_tsv(filtered_reps, tsv_all, tsv_reps)
     write_representatives_fasta(filtered_reps, fasta_all, fasta_reps)
 
