@@ -1,0 +1,11 @@
+
+
+Building a new DB, current time: 02/08/2026 13:56:16
+New DB name:   /Users/piasotlar/Desktop/fern-virus-discovery-pipeline/results/clustering/virus_contigs_blastdb/blastdb
+New DB title:  ../results/clustering/all_virus_contigs.fasta
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 240 sequences in 0.00574994 seconds.
+
+

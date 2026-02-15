@@ -1,15 +1,15 @@
 rule spades_assembly:
     input:
-        r1_paired = "results/{sample}/{sample}_1P.fq.gz",
-        r2_paired = "results/{sample}/{sample}_2P.fq.gz" 
+        r1_paired = "../results/{sample}/{sample}_1P.fq.gz",
+        r2_paired = "../results/{sample}/{sample}_2P.fq.gz" 
     output:
-        contigs_dir = temp(directory("results/{sample}/spades")),
-        contigs = "results/{sample}/{sample}_spades_contigs.fasta"
+        contigs_dir = temp(directory("../results/{sample}/spades")),
+        contigs = "../results/{sample}/{sample}_spades_contigs.fasta"
     conda:
         "../envs/spades.yaml" 
     log:
         "../logs/spades/{sample}.log" 
-    threads: 12
+    threads: 16
 
     shell:
         """

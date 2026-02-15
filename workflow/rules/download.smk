@@ -7,7 +7,6 @@ rule download_fastq:
 
     conda:
         "../envs/download.yaml"
-
     threads: 4
     shell:
         """

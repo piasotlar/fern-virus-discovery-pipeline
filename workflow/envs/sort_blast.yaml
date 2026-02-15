@@ -1,0 +1,6 @@
+name: sort_blast
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - csvtk

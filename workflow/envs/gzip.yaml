@@ -1,0 +1,5 @@
+name: gzip_env
+channels:
+  - conda-forge
+dependencies:
+  - gzip

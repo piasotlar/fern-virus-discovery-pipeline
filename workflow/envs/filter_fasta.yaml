@@ -1,6 +1,5 @@
-name: filter_env
+name: filter_fasta
 channels:
   - conda-forge
 dependencies:
   - python=3.11
-  - pandas

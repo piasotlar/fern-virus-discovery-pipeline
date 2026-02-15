@@ -6,19 +6,39 @@ samples = pd.read_csv(config["samples_tsv"], sep="\t")
 sample_names = samples["sample"].tolist()
 
 include: "rules/download.smk"
-# include: "rules/trim.smk"
-# include: "rules/spades.smk"
+include: "rules/trim.smk"
+include: "rules/spades.smk"
 
-# include: "rules/fasta_to_db.smk"
-# include: "rules/mmseqs2_taxonomy.smk"
-# include: "rules/to_tsv.smk"
+include: "rules/fasta_to_db.smk"
+include: "rules/mmseqs2_taxonomy.smk"
+include: "rules/to_tsv.smk"
+include: "rules/filter.smk"
 
+#clustering
+include: "rules/clustering/filter_fasta.smk"
+include: "rules/clustering/concatenate_fasta.smk"
+include: "rules/clustering/make_blast_db.smk"
+include: "rules/clustering/blastn.smk"
+include: "rules/clustering/process_blast.smk"
+include: "rules/clustering/sort_blast.smk"
+include: "rules/clustering/anicalc.smk"
+include: "rules/clustering/aniclust.smk"
+include: "rules/clustering/concatenate_tsv.smk"
+include: "rules/clustering/reps.smk"
+
+
+#dodaj gunzip
 
 rule all:
     input:
-        #expand("results/{sample}/{sample}_taxonomy.tsv", sample=sample_names)
-        expand("../resources/fastq/{sample}_1.fastq", sample=sample_names),
-        expand("../resources/fastq/{sample}_2.fastq", sample=sample_names)
+        #expand("../results/{sample}/{sample}_taxonomy.tsv", sample=sample_names)
+        #expand("../results/{sample}/{sample}_taxonomy_filtered.tsv", sample=sample_names)
+        expand("../results/{sample}/{sample}_virus_contigs.fasta", sample=sample_names),
+        expand("../results/test_results/{sample}_taxonomy_filtered.tsv", sample=sample_names),
+        "../results/clustering/representatives.tsv",
+        "../results/clustering/representatives.fasta"
+        #expand("../resources/fastq/{sample}_1.fastq", sample=sample_names),
+        #expand("../resources/fastq/{sample}_2.fastq", sample=sample_names)
 
 
   

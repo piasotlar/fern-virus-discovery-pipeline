@@ -1,0 +1,6 @@
+name: blastn
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - blast

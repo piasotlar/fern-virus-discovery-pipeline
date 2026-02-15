@@ -1,13 +1,13 @@
 rule to_tsv:
     input:
-        resultDB = "results/{sample}/{sample}_resultDB.index",
-        queryDB = "results/{sample}/{sample}_queryDB.index"
+        resultDB = "../results/{sample}/{sample}_resultDB.index",
+        queryDB = "../results/{sample}/{sample}_db/{sample}_queryDB.index"
 
     params:
-        result = "results/{sample}/{sample}_resultDB",
-        query = "results/{sample}/{sample}_queryDB",
+        result = "../results/{sample}/{sample}_resultDB",
+        query = "../results/{sample}/{sample}_db/{sample}_queryDB",
     output:
-        tsv_result = "results/{sample}/{sample}_taxonomy.tsv"
+        tsv_result = "../results/{sample}/{sample}_taxonomy.tsv"
     conda:
         "../envs/mmseqs2.yaml"
     log:

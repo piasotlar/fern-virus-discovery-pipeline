@@ -1,0 +1,6 @@
+name: blast_db
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - blast
