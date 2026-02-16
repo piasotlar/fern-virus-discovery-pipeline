@@ -1,0 +1,7 @@
+name: bwa_env
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bwa-mem2
+  - samtools
