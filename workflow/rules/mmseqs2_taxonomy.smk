@@ -16,5 +16,5 @@ rule mmseqs2_taxonomy:
     threads: 30
     shell:
         """
-        mmseqs taxonomy {params.query_db} {input.seqTaxDB} {params.result} {output.tmp} --threads {threads} --tax-lineage 1 &>> {log}
+        mmseqs taxonomy {params.query_db} {input.seqTaxDB} {params.result} {output.tmp} --threads {threads} --tax-lineage 1 > {log} 2>&1
         """
