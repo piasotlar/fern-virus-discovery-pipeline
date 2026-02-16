@@ -6,6 +6,7 @@ samples = pd.read_csv(config["samples_tsv"], sep="\t")
 sample_names = samples["sample"].tolist()
 
 include: "rules/download.smk"
+include: "rules/fastq_gunzip.smk"
 include: "rules/trim.smk"
 include: "rules/spades.smk"
 
@@ -24,19 +25,18 @@ include: "rules/clustering/anicalc.smk"
 include: "rules/clustering/aniclust.smk"
 include: "rules/clustering/reps.smk"
 
+#mapping
+include: "rules/mapping/bwa.smk"
+include: "rules/mapping/coverm.smk"
+
 
 #dodaj gunzip
 
 rule all:
     input:
-        #expand("../results/{sample}/{sample}_taxonomy.tsv", sample=sample_names)
-        #expand("../results/{sample}/{sample}_taxonomy_filtered.tsv", sample=sample_names)
-        expand("../results/{sample}/{sample}_virus_contigs.fasta", sample=sample_names),
-        expand("../results/test_results/{sample}_taxonomy_filtered.tsv", sample=sample_names),
-        expand("../results/{sample}/{sample}_representatives.tsv", sample=sample_names),
-        expand("../results/{sample}/{sample}_representatives.fasta", sample=sample_names)
-        #expand("../resources/fastq/{sample}_1.fastq", sample=sample_names),
-        #expand("../resources/fastq/{sample}_2.fastq", sample=sample_names)
+        expand("../results/{sample}/{sample}_coverm.tsv", sample=sample_names),
 
+
+   
 
   

@@ -1,7 +1,7 @@
 rule trimming:
     input:
-        r1 = "../resources/fastq/{sample}_1.fastq",
-        r2 = "../resources/fastq/{sample}_2.fastq",
+        r1 = "../resources/fastq/{sample}_1.fastq.gz",
+        r2 = "../resources/fastq/{sample}_2.fastq.gz",
         adapters = "../resources/adapters/truseq_UDI.fa" 
 
     output:

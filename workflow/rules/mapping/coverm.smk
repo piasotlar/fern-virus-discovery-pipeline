@@ -10,7 +10,7 @@ rule coverm:
 
     params:
         min_identity = 95,
-        min_aln = 80, #ali bi raje length? ali percent?
+        min_aln = 90, #ali bi raje length? ali percent?
         methods="mean covered_fraction count"
 
     threads: 8
@@ -36,4 +36,5 @@ Include secondary alignments. [default: not set]
 
 ali odstranim supplementary?
 ali to pomeni da so secondary po defaultu izključeni?
+ali bi to raje s sam tools?
 """

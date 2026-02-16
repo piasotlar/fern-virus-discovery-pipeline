@@ -2,7 +2,6 @@ rule to_tsv:
     input:
         resultDB = "../results/{sample}/{sample}_resultDB.index",
         queryDB = "../results/{sample}/{sample}_db/{sample}_queryDB.index"
-
     params:
         result = "../results/{sample}/{sample}_resultDB",
         query = "../results/{sample}/{sample}_db/{sample}_queryDB",

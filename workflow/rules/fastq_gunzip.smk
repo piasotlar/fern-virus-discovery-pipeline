@@ -1,6 +1,6 @@
 rule gzip_fastq:
     input:
-        r1 = "..resources/fastq/{sample}_1.fastq",
+        r1 = "../resources/fastq/{sample}_1.fastq",
         r2 = "../resources/fastq/{sample}_2.fastq"
 
     output:
@@ -20,4 +20,4 @@ rule gzip_fastq:
         rm {input.r1} {input.r2}
         """
 
-    # najbrž moram potem še spremenit v trimming da vzame .gz datoteke
+    
