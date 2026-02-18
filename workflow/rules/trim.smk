@@ -7,15 +7,14 @@ rule trimming:
     output:
         r1_paired = "../results/{sample}/{sample}_1P.fq.gz",
         r2_paired = "../results/{sample}/{sample}_2P.fq.gz",
-        r1_unpaired = "../results/{sample}/{sample}_1U.fq.gz",
-        r2_unpaired = "../results/{sample}/{sample}_2U.fq.gz",
+        r1_unpaired = temp("../results/{sample}/{sample}_1U.fq.gz"),
+        r2_unpaired = temp("../results/{sample}/{sample}_2U.fq.gz"),
         check = "../results/{sample}/{sample}_trim.done"
     conda:
         "../envs/trimmomatic.yaml"
     log:
         "../logs/trimming/{sample}.log"
-    threads: 6
-    shell:
+    threads: 4
         """
         mkdir -p ../results/{wildcards.sample}
 

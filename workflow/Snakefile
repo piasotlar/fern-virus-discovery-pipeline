@@ -30,8 +30,6 @@ include: "rules/mapping/bwa.smk"
 include: "rules/mapping/coverm.smk"
 
 
-#dodaj gunzip
-
 rule all:
     input:
         expand("../results/{sample}/{sample}_coverm.tsv", sample=sample_names),

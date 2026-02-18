@@ -16,14 +16,10 @@ rule bwa:
         """
         bwa-mem2 index {input.reps} >> {log} 2>&1
         bwa-mem2 mem -t {threads} {input.reps} {input.r1} {input.r2} 2>> {log} \
-          | samtools view -b 2>> {log} \
+          | samtools view -b -F 2304 2>> {log} \
           | samtools sort -@ 2 -o {output.bam_sorted} 2>> {log}
         """
 
-#ali raje bwa 1 ali 2
-#kakšne dolžine readov imamo? je mem najboljši? mem je 70 bp + ?
-#ali smo hoteli iz vseh datotek mapirat reade ali samo iz tiste iz katere so kontigi?
-# ali vzamemo paired?
 
 #bwa nastavitve:
 
@@ -36,4 +32,4 @@ rule bwa:
 #[-R RGline] [-v verboseLevel] db.prefix reads.fq [mates.fq]
 
 #samtools
-# sec in sup odstranimo z coverm ali z samtools --> | samtools view -b -F 2304 2>> {log} \
+# sec in sup odstranimo z coverm ali z samtools --> | samtools view -b -F 2304 2>> {log}  -- to še popravit\ (oboje)
