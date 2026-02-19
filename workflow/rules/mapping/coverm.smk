@@ -10,7 +10,7 @@ rule coverm:
 
     params:
         min_identity = 95,
-        min_aln = 95
+        min_aln = 95,
         methods="mean covered_fraction count"
 
     threads: 8

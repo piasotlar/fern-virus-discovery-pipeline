@@ -15,6 +15,7 @@ rule trimming:
     log:
         "../logs/trimming/{sample}.log"
     threads: 4
+    shell:
         """
         mkdir -p ../results/{wildcards.sample}
 
