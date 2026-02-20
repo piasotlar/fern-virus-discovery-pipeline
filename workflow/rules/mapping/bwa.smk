@@ -1,8 +1,8 @@
 rule bwa:
     input:
-        reps = "../results/{sample}/{sample}_representatives.fasta", #input fasta so represenattives it posameznega fajla
+        reps = "../results/{sample}/{sample}_representatives.fasta", 
         r1 = "../results/{sample}/{sample}_1P.fq.gz",
-        r2 = "../results/{sample}/{sample}_2P.fq.gz" #ali so lahko gunzip? preveriš!
+        r2 = "../results/{sample}/{sample}_2P.fq.gz" 
     output:
         bam_sorted = "../results/{sample}/{sample}_aln_sorted.bam",
         idx_marker="../results/{sample}/{sample}_representatives.fasta.pac"

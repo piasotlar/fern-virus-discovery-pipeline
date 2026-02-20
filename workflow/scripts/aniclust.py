@@ -109,7 +109,7 @@ def build_graph(
     # the sequences being connected
     graph = ig.Graph()
     graph.add_vertices(list(nodes), attributes={"length": lengths})
-    graph.add_edges(edges, attributes={"weight": weights, "ani": anis}) #originalno je tukaj ani:weights
+    graph.add_edges(edges, attributes={"weight": weights, "ani": weights}) 
     return graph
 
 

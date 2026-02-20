@@ -34,6 +34,4 @@ Exclude supplementary alignments. [default: not set]
 --include-secondary
 Include secondary alignments. [default: not set]
 
-
-coverm filter mogoče ttreba posebaj??
 """

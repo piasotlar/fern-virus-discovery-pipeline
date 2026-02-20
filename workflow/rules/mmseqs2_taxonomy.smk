@@ -4,7 +4,7 @@ rule mmseqs2_taxonomy:
         queryDB_index = "../results/{sample}/{sample}_db/{sample}_queryDB.index"
         #seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB" #TARGET DB na NIB serverjih
     output:
-        tmp = temp(directory("tmp/{sample}_taxonomy_tmp")),  #tmp za temporary files od taxonomy (se zbriše potem)
+        tmp = temp(directory("tmp/{sample}_taxonomy_tmp")), 
         resultsDB = "../results/{sample}/{sample}_resultDB.index"
     params:
         query_db = "../results/{sample}/{sample}_db/{sample}_queryDB",
