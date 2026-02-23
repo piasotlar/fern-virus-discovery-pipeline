@@ -1,6 +1,6 @@
 rule mmseqs2_taxonomy:
     input:
-        seqTaxDB = "../resources/", # še dodamo target db
+        seqTaxDB = "/d/hpc/projects/FRI/ps02292/db/nr/nr.fnaDB", #TARGET DB na HPC
         queryDB_index = "../results/{sample}/{sample}_db/{sample}_queryDB.index"
         #seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB" #TARGET DB na NIB serverjih
     output:
@@ -14,7 +14,7 @@ rule mmseqs2_taxonomy:
     log:
         "../logs/mmseqs2/taxonomy/{sample}.log"
 
-    threads: 16
+    threads: 32
     shell:
         """
         mmseqs taxonomy {params.query_db} {input.seqTaxDB} {params.result} {output.tmp} --threads {threads} --tax-lineage 1 > {log} 2>&1
