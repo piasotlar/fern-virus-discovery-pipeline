@@ -6,7 +6,7 @@ rule blastn:
         blast_tsv = "../results/{sample}/{sample}_blast.tsv"
     params:
         min_blast_ident = 0 
-    threads: 8
+    threads: 4
     conda:
         "../../envs/blastn.yaml" 
     log: 

@@ -12,7 +12,8 @@ rule gzip_fastq:
 
     conda:
         "../envs/gzip.yaml"
-
+    
+    threads: 2
     shell: 
         """
         gzip -c {input.r1} > {output.r1_gz} 2>> {log}
