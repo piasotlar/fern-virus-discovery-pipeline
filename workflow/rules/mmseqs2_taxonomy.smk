@@ -1,8 +1,8 @@
 rule mmseqs2_taxonomy:
     input:
-        seqTaxDB = "/d/hpc/projects/FRI/ps02292/db/nr/nr.fnaDB", #TARGET DB na HPC
-        queryDB_index = "../results/{sample}/{sample}_db/{sample}_queryDB.index"
-        #seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB" #TARGET DB na NIB serverjih
+        #seqTaxDB = "/d/hpc/projects/FRI/ps02292/db/nr/nr.fnaDB", #TARGET DB na HPC
+        queryDB_index = "../results/{sample}/{sample}_db/{sample}_queryDB.index",
+        seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB" #TARGET DB na NIB serverjih
     output:
         tmp = temp(directory("tmp/{sample}_taxonomy_tmp")), 
         resultsDB = "../results/{sample}/{sample}_resultDB.index"

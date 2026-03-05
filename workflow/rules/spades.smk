@@ -9,7 +9,7 @@ rule spades_assembly:
         "../envs/spades.yaml" 
     log:
         "../logs/spades/{sample}.log" 
-    threads: 16
+    threads: 32
 
     shell:
         """
