@@ -1,0 +1,8 @@
+name: longest_orfs
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python
+  - pandas
+  - biopython

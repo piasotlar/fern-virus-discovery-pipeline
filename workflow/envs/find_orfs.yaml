@@ -1,0 +1,6 @@
+name: find_orfs
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - orfipy

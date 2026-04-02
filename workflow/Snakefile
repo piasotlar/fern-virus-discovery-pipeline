@@ -29,10 +29,17 @@ include: "rules/clustering/reps.smk"
 include: "rules/mapping/bwa.smk"
 include: "rules/mapping/coverm.smk"
 
+#orfipy
+include: "rules/find_orfs.smk"
+include: "rules/extract_longest_orfs.smk"
+
+#mmseqs2 proteins
+include: "rules/mmseqs2_proteins.smk"
+
 
 rule all:
     input:
-        expand("../results/{sample}/{sample}_coverm.tsv", sample=sample_names),
+        expand("../results/{sample}/{sample}_mmseqs2_top_hits.tsv", sample=sample_names),
 
 
    

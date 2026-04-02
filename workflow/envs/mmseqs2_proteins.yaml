@@ -1,0 +1,6 @@
+rule: mmseqs2_proteins
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - mmseqs2
