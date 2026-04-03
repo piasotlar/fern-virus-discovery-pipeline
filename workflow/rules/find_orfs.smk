@@ -3,7 +3,7 @@ rule find_orfs:
         reps = "../results/{sample}/{sample}_representatives.fasta"
     output:
         orfs = "../results/{sample}/orfipy/orfs.fa",
-        bed = "../results/{sample}/orfipy/bed_file_longest.bed"
+        bed = "../results/{sample}/orfipy/bed_file_longest"
     params:
         outdir = "../results/{sample}/orfipy",
         bed_prefix = "bed_file",

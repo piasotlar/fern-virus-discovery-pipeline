@@ -1,6 +1,6 @@
 rule extract_longest_orfs:
     input:
-        bed = "../results/{sample}/orfipy/bed_file_longest.bed",
+        bed = "../results/{sample}/orfipy/bed_file_longest",
         dna = "../results/{sample}/orfipy/orfs.fa"
     output:
         fa = "../results/{sample}/{sample}_longest_orfs.fa",

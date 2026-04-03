@@ -25,7 +25,7 @@ def filter_reps(reps, min, max):
     kept = []
     for rep in reps:
         L = extract_length_from_id(rep)
-        if L is None or L >= int(min) or L <= int(max):
+        if L is not None and L >= int(min) and L <= int(max):
             kept.append(rep)
     return kept
 
