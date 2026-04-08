@@ -39,8 +39,15 @@ include: "rules/mmseqs2_proteins.smk"
 
 rule all:
     input:
-        expand("../results/{sample}/{sample}_mmseqs2_top_hits.tsv", sample=sample_names),
-
+        # mapping results
+        expand("../results/{sample}/{sample}_coverm.tsv", sample=sample_names),
+        
+        # longest ORFs
+        expand("../results/{sample}/{sample}_longest_orfs.fa", sample=sample_names),
+        expand("../results/{sample}/{sample}_longest_orfs_len.txt", sample=sample_names),
+        
+        # MMseqs2 hits
+        expand("../results/{sample}/{sample}_mmseqs2_top_hits.tsv", sample=sample_names)
 
    
 
