@@ -1,7 +1,7 @@
 rule mmseqs2_proteins:
     input:
         orfs = "../results/{sample}/orfipy/orfs.fa",
-        seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB"
+        seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB" #spremeni bazo
     output:
         tsv = "../results/{sample}/{sample}_mmseqs2_top_hits.tsv"
     params:
