@@ -5,6 +5,6 @@ channels:
   - defaults
 
 dependencies:
-  - python
+  - python=3.11
   - pandas
   - biopython

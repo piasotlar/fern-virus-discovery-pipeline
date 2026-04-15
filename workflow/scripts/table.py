@@ -4,15 +4,7 @@ from Bio import Entrez, SeqIO
 from urllib.error import HTTPError, URLError
 from io import StringIO
 import time
-"""
-Entrez.email = "pia.sotli@gmail.com"  
-Entrez.api_key = "a5b4487a22d64bedc996512e7b495df47608" #v config?
-"""
 
-"""
-v config.yaml 
-ncbi_api_key: "tvoj_api_key"
-"""
 Entrez.api_key = snakemake.config["ncbi_api_key"]
 Entrez.email = snakemake.config["ncbi_email"]
 
@@ -52,8 +44,8 @@ def protein_info_from_record(accession: str):
     if record is None:
         return None
     title = record.description
-    keywords = ["movement protein", "movement-protein", "mvp"] #ali so še kakšna poimenovanja za movement protein 
-    poly = "polyprotein" #ali je mogoče tudi pri hypothetical in uncharacterized proteinih treba tako
+    keywords = ["movement protein", "movement-protein", "mvp"]
+    poly = "polyprotein"
     texts = []
     if record.description:
         texts.append(record.description)
@@ -110,10 +102,7 @@ for rep_file, coverm_file, orf_file, mmseqs_file in zip(
     df_rep = pd.read_csv(rep_file, sep="\t", header=None)
     df_coverm = pd.read_csv(coverm_file, sep="\t", header=0)
     df_orfs = pd.read_csv(orf_file, sep="\t", header=0)
-    df_proteins = pd.read_csv(mmseqs_file, sep="\t", header=None)
-
-    #rename columns in proteins file
-    df_proteins.columns = [
+    protein_cols = [
     "ORF_ID",
     "target",
     "evalue",
@@ -124,6 +113,12 @@ for rep_file, coverm_file, orf_file, mmseqs_file in zip(
     "bits",
     "protein_taxonomy"
     ]
+
+    try:
+        df_proteins = pd.read_csv(mmseqs_file, sep="\t", header=None)
+        df_proteins.columns = protein_cols
+    except pd.errors.EmptyDataError:
+        df_proteins = pd.DataFrame(columns=protein_cols)
 
     #proteins file - filter for only top ORFs (longest)
     #take only the best hit for each ORF (lowest evalue)
