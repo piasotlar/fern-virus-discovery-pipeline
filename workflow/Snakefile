@@ -36,7 +36,8 @@ include: "rules/extract_longest_orfs.smk"
 #mmseqs2 proteins
 include: "rules/mmseqs2_proteins.smk"
 
-#final table
+#final tables
+include: "rules/table_orfs.smk"
 include: "rules/table.smk"
 rule all:
     input:
@@ -51,6 +52,8 @@ rule all:
         expand("../results/{sample}/{sample}_mmseqs2_top_hits.tsv", sample=sample_names),
 
         #table
-        "../results/table.tsv"   
+        "../results/table.tsv",
+        "../results/table_orfs.tsv"
+
 
   

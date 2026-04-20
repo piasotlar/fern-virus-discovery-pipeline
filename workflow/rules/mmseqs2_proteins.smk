@@ -19,5 +19,5 @@ rule mmseqs2_proteins:
 
         mmseqs createdb {input.orfs} {params.query_db} >> {log} 2>&1
         mmseqs search {params.query_db} {input.seqTaxDB} {params.result_db} {params.tmp_dir} --threads {threads} >> {log} 2>&1
-        mmseqs convertalis {params.query_db} {input.seqTaxDB} {params.result_db} {output.tsv} --format-output "query,target,evalue,pident,qlen,tlen,alnlen,bits,taxlineage" >> {log} 2>&1
+        mmseqs convertalis {params.query_db} {input.seqTaxDB} {params.result_db} {output.tsv} --format-output "query,target,theader,evalue,pident,qlen,tlen,alnlen,bits,taxlineage" >> {log} 2>&1
         """
