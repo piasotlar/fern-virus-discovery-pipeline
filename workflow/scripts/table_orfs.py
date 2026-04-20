@@ -56,7 +56,6 @@ for orfs, top_hits in zip(snakemake.input.orfs, snakemake.input.mmseqs2_proteins
     df_merged = (
         df_orfs
         .merge(df_proteins_first, on="ORF_ID", how="left")
-        .drop(columns=["ORF_ID"])
         .sort_values(["sample", "contig", "orf"])
         .reset_index(drop=True)
     )

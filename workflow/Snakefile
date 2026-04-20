@@ -39,6 +39,10 @@ include: "rules/mmseqs2_proteins.smk"
 #final tables
 include: "rules/table_orfs.smk"
 include: "rules/table.smk"
+
+#mmseqs2 proteins for ORFs with no hits
+include: "rules/filter_orfs_fasta.smk"
+include: "rules/mmseqs2_proteins_2.smk"
 rule all:
     input:
         # mapping results
@@ -53,7 +57,13 @@ rule all:
 
         #table
         "../results/table.tsv",
-        "../results/table_orfs.tsv"
+        "../results/table_orfs.tsv",
+
+        expand("../results/{sample}/orfipy/orfs_no_hits.fa", sample=sample_names),
+        expand("../results/{sample}/{sample}_mmseqs2_top_hits_2.tsv", sample=sample_names)
+
+
+
 
 
   
