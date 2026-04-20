@@ -1,10 +1,11 @@
 rule mmseqs2_convertalis_with_header:
     input:
-        query_db = "../results/{sample}/mmseqs2_proteins/{sample}_mmseqs2_queryDB",
         seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB", #za spremenit
-        result_db = "../results/{sample}/mmseqs2_proteins/{sample}_mmseqs2_resultDB"
     output:
         tsv = "../results/{sample}/{sample}_mmseqs2_top_hits.tsv"
+    params:
+        query_db = "../results/{sample}/mmseqs2_proteins/{sample}_mmseqs2_queryDB",
+        result_db = "../results/{sample}/mmseqs2_proteins/{sample}_mmseqs2_resultDB"
     log:
         "../logs/mmseqs2/{sample}_convertalis.log"
     conda:
