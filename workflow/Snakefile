@@ -36,31 +36,27 @@ include: "rules/extract_longest_orfs.smk"
 #mmseqs2 proteins
 include: "rules/mmseqs2_proteins.smk"
 
-#final tables
+#table of ORFs
 include: "rules/table_orfs.smk"
-include: "rules/table.smk"
+
 
 #mmseqs2 proteins for ORFs with no hits
 include: "rules/filter_orfs_fasta.smk"
 include: "rules/mmseqs2_proteins_2.smk"
+
+#table of ORFs with mmseqs2 results for ORFs with no hits
+include: "rules/table_orfs_2.smk"
+include: "rules/table.smk"
+
 rule all:
     input:
-        # mapping results
-        expand("../results/{sample}/{sample}_coverm.tsv", sample=sample_names),
-        
-        # longest ORFs
-        expand("../results/{sample}/{sample}_longest_orfs.fa", sample=sample_names),
-        expand("../results/{sample}/{sample}_longest_orfs_len.txt", sample=sample_names),
-        
-        # MMseqs2 hits
-        expand("../results/{sample}/{sample}_mmseqs2_top_hits.tsv", sample=sample_names),
-
-        #table
-        "../results/table.tsv",
         "../results/table_orfs.tsv",
 
-        expand("../results/{sample}/orfipy/orfs_no_hits.fa", sample=sample_names),
+        #expand("../results/{sample}/orfipy/orfs_no_hits.fa", sample=sample_names),
         expand("../results/{sample}/{sample}_mmseqs2_top_hits_2.tsv", sample=sample_names)
+
+        "../results/table_orfs_2.tsv",
+        "../results/table.tsv"
 
 
 

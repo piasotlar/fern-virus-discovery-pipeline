@@ -4,6 +4,8 @@ rule filter_orfs_fasta:
         orfs = "../results/{sample}/orfipy/orfs.fa"
     output:
         filtered_orfs = "../results/{sample}/orfipy/orfs_no_hits.fa"
+    params:
+        min_len = 150
     conda:
         "../envs/table.yaml"
     log:

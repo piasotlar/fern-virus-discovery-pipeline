@@ -43,9 +43,10 @@ def protein_info_from_record(accession: str):
     record = fetch_protein_record(accession)
     if record is None:
         return None
-    title = record.description
-    keywords = ["movement protein", "movement-protein", "mvp"]
+    keywords_mvp = ["movement protein", "movement-protein", "mvp"]
+    keywords_cp = ["coat protein", "coat-protein", "cp"]
     poly = "polyprotein"
+
     texts = []
     if record.description:
         texts.append(record.description)
@@ -58,13 +59,15 @@ def protein_info_from_record(accession: str):
                 texts.append(v)
     
     full_text = " ".join(texts).lower()
-    found_mvp = any(k in full_text for k in keywords)
+    found_mvp = any(k in full_text for k in keywords_mvp)
+    found_cp = any(k in full_text for k in keywords_cp)
     found_poly = poly in full_text
 
-    return title, found_mvp, found_poly
+    return found_mvp, found_poly, found_cp
 
 def get_taxonomy(taxonomy_list):
 
+    realm = None
     kingdom = None
     phylum = None
     class_ = None
@@ -74,6 +77,9 @@ def get_taxonomy(taxonomy_list):
     species = None
 
     for tax in taxonomy_list:
+        tax = tax.strip()
+        if tax.endswith("viria") and not tax.startswith(("k_", "p_", "c_", "o_", "f_", "g_", "s_")):
+            realm = tax.replace("-_", "")
         if tax.startswith("k_"):
             kingdom = tax[2:]
         elif tax.startswith("p_"):
@@ -89,51 +95,26 @@ def get_taxonomy(taxonomy_list):
         elif tax.startswith("s_"):
             species = tax[2:]
 
-    return kingdom, phylum, class_, order, family, genus, species
+    return realm,kingdom, phylum, class_, order, family, genus, species
 
-
+table_orfs = snakemake.input.table_orfs
+df_table_orfs = pd.read_csv(table_orfs, sep="\t", header=0)
 contigs = []
-for rep_file, coverm_file, orf_file, mmseqs_file in zip(
+for rep_file, coverm_file, orf_file in zip(
     snakemake.input.reps,
     snakemake.input.coverm,
     snakemake.input.longest_orfs,
-    snakemake.input.mmseqs2_proteins
 ):
+    
+    sample_name = rep_file.split("/")[-2]
+
     df_rep = pd.read_csv(rep_file, sep="\t", header=None)
     df_coverm = pd.read_csv(coverm_file, sep="\t", header=0)
     df_orfs = pd.read_csv(orf_file, sep="\t", header=0)
-    protein_cols = [
-    "ORF_ID",
-    "target",
-    "evalue",
-    "pident",
-    "qlen",
-    "tlen",
-    "alnlen",
-    "bits",
-    "protein_taxonomy"
-    ]
+    
+    df_table_sample = df_table_orfs[df_table_orfs["sample"] == sample_name].copy()
 
-    try:
-        df_proteins = pd.read_csv(mmseqs_file, sep="\t", header=None)
-        df_proteins.columns = protein_cols
-    except pd.errors.EmptyDataError:
-        df_proteins = pd.DataFrame(columns=protein_cols)
-
-    #proteins file - filter for only top ORFs (longest)
-    #take only the best hit for each ORF (lowest evalue)
-    longest_orfs = set(df_orfs["ORF_ID"])
-
-    df_proteins["evalue"] = pd.to_numeric(df_proteins["evalue"], errors="coerce")
-    df_proteins = df_proteins.dropna(subset=["evalue"])
-
-    df_proteins = (
-        df_proteins
-        .sort_values(["ORF_ID", "evalue"])
-        .drop_duplicates("ORF_ID", keep="first")
-    )
-
-    df_proteins = df_proteins[df_proteins["ORF_ID"].isin(longest_orfs)].copy()
+    df_table_sample["evalue"] = pd.to_numeric(df_table_sample["evalue"], errors="coerce")
 
     #rename columns in representative file
     df_rep.columns = [
@@ -152,49 +133,59 @@ for rep_file, coverm_file, orf_file, mmseqs_file in zip(
     df_rep["Contig"] = df_rep["Contig"].astype(str).str.strip()
     df_coverm["Contig"] = df_coverm["Contig"].astype(str).str.strip()
     df_orfs["Contig"] = (df_orfs["ORF_ID"].astype(str).str.replace(r"_ORF\.\d+$", "", regex=True).str.strip())
-    df_proteins["Contig"] = df_proteins["ORF_ID"].str.replace(r"_ORF\.\d+$", "", regex=True).str.strip()
 
     merged = df_rep.merge(df_coverm, on="Contig", how="left")
     merged = merged.merge(df_orfs, on="Contig", how="left")
-    merged = merged.merge(df_proteins, on="Contig", how="left")
     
     #create the table
     sample_name = rep_file.split("/")[-2]
     for idx, row in merged.iterrows():
         node = row["Contig"].split("_")[1]
-        name = f"{sample_name}_NODE_{node}"
+        name = f"NODE_{node}"
         length = row["Contig"].split("_")[3]
         cov = row["Contig"].split("_")[5]
         taxonomy_list = str(row["taxonomy"]).split(";")
-        kingdom, phylum, class_, order, family, genus, species = get_taxonomy(taxonomy_list)
-        rpkm = row[f"{sample_name}_aln_sorted RPKM"]
-        read_count = row[f"{sample_name}_aln_sorted Read Count"]
-        orf_length = row["orf_len"]
-        orf_coverage = row["orf_perc"]
+        realm, kingdom, phylum, class_, order, family, genus, species = get_taxonomy(taxonomy_list)
+        rpkm = float(row[f"{sample_name}_aln_sorted RPKM"])
+        read_count = int(row[f"{sample_name}_aln_sorted Read Count"])
+        orf_length = int(row["orf_len"])
+        orf_coverage = float(row["orf_perc"])
 
-        accession = row["target"]
-        if pd.isna(accession):
-            title, found_mvp, found_poly = None, False, False
-        else:
+        accessions = (
+            df_table_sample.loc[df_table_sample["contig"] == f"NODE_{node}", "target"]
+            .dropna()
+            .astype(str)
+            .str.strip()
+            .unique()
+        )
+        num_of_orfs = df_table_sample[df_table_sample["contig"] == f"NODE_{node}"].shape[0]
+
+        found_mvp = False
+        found_poly = False
+        found_cp = False
+        
+        for accession in accessions:
             protein_info = protein_info_from_record(accession)
+
             if protein_info is None:
-                title, found_mvp, found_poly = None, False, False
-            else:
-                title, found_mvp, found_poly = protein_info
-        evalue = row["evalue"]
-        pident = row["pident"]
-        qlen = row["qlen"]
-        tlen = row["tlen"]
-        alnlen = row["alnlen"]
-        bits = row["bits"]
-        protein_taxonomy_list = str(row["protein_taxonomy"]).split(";")
-        p_kingdom, p_phylum, p_class, p_order, p_family, p_genus, p_species = get_taxonomy(protein_taxonomy_list)
+                continue
+
+            mvp, poly, cp = protein_info
+
+            found_mvp = found_mvp or mvp
+            found_poly = found_poly or poly
+            found_cp = found_cp or cp
+
+            if found_mvp and found_poly:
+                break
 
 
         contig = {
+            "SAMPLE": sample_name,
             "CONTIG NAME": name,
             "LENGTH": length,
             "SPADES_COV": cov,
+            "REALM": realm,
             "KINGDOM": kingdom,
             "PHYLUM": phylum,
             "CLASS": class_,
@@ -206,23 +197,10 @@ for rep_file, coverm_file, orf_file, mmseqs_file in zip(
             "COVERM READ COUNT": read_count,
             "LONGEST ORF LENGTH": orf_length,
             "LONGEST ORF COVERAGE": orf_coverage,
-            "PROTEIN ACCESSION": accession,
-            "PROTEIN TITLE": title,
+            "NUM OF ORFS": num_of_orfs,
             "MVP": found_mvp,
-            "POLYPROTEIN": found_poly,
-            "EVALUE": evalue,
-            "PIDENT": pident,
-            "QUERY(ORF) LEN": qlen,
-            "TARGET PROTEIN LEN": tlen,
-            "ALIGNMENT LEN": alnlen,
-            "BITS": bits,
-            "PROTEIN KINGDOM": p_kingdom,
-            "PROTEIN PHYLUM": p_phylum,
-            "PROTEIN CLASS": p_class,
-            "PROTEIN ORDER": p_order,
-            "PROTEIN FAMILY": p_family,
-            "PROTEIN GENUS": p_genus,
-            "PROTEIN SPECIES": p_species
+            "CP": found_cp,
+            "POLYPROTEIN": found_poly
         }
         contigs.append(contig)
 

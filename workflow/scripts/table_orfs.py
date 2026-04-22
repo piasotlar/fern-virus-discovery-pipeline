@@ -28,6 +28,9 @@ for orfs, top_hits in zip(snakemake.input.orfs, snakemake.input.mmseqs2_proteins
                 orf_full = header.split()[0]
                 orf_short = orf_full.split("_")[-1]
 
+                m = re.search(r'length:(\d+)', line)
+                seq_len = int(m.group(1)) if m else 0
+
                 match = re.match(r"(NODE_\d+)", orf_full)
                 contig = match.group(1) if match else "NA"
 
@@ -35,7 +38,8 @@ for orfs, top_hits in zip(snakemake.input.orfs, snakemake.input.mmseqs2_proteins
                     "sample": sample_name,
                     "contig": contig,
                     "orf": orf_short,
-                    "ORF_ID": orf_full
+                    "ORF_ID": orf_full,
+                    "length": seq_len
                 })
 
     df_orfs = pd.DataFrame(orf_rows).drop_duplicates()
