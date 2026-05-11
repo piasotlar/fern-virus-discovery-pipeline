@@ -4,6 +4,7 @@ from Bio import Entrez, SeqIO
 from urllib.error import HTTPError, URLError
 from io import StringIO
 import time
+import re
 
 Entrez.api_key = snakemake.config["ncbi_api_key"]
 Entrez.email = snakemake.config["ncbi_email"]
@@ -41,27 +42,68 @@ def fetch_protein_record(accession: str, retries: int = 3, base_delay: float = 0
 
 def protein_info_from_record(accession: str):
     record = fetch_protein_record(accession)
+
     if record is None:
         return None
-    keywords_mvp = ["movement protein", "movement-protein", "mvp"]
-    keywords_cp = ["coat protein", "coat-protein", "cp"]
-    poly = "polyprotein"
+
+    mvp_patterns = [
+        r"\bmovement protein\b",
+        r"\bmovement-protein\b",
+        r"\bcell-to-cell movement protein\b",
+        r"\bviral movement protein\b",
+        r"\b30k movement protein\b",
+        r"\b30 kda movement protein\b",
+        r"\btriple gene block protein 1\b",
+        r"\btriple gene block protein 2\b",
+        r"\btriple gene block protein 3\b",
+        r"\btgb1\b",
+        r"\btgb2\b",
+        r"\btgb3\b",
+        r"\bmp\b",
+        r"\bmvp\b"
+    ]
+
+    cp_patterns = [
+        r"\bcoat protein\b",
+        r"\bcoat-protein\b",
+        r"\bcapsid protein\b",
+        r"\bcp\b"
+    ]
+
+    poly_patterns = [
+        r"\bpolyprotein\b"
+    ]
 
     texts = []
+
     if record.description:
         texts.append(record.description)
+
     comment = record.annotations.get("comment")
     if comment:
         texts.append(comment)
+
     for feat in record.features:
         for values in feat.qualifiers.values():
             for v in values:
                 texts.append(v)
-    
+
     full_text = " ".join(texts).lower()
-    found_mvp = any(k in full_text for k in keywords_mvp)
-    found_cp = any(k in full_text for k in keywords_cp)
-    found_poly = poly in full_text
+
+    found_mvp = any(
+        re.search(pattern, full_text)
+        for pattern in mvp_patterns
+    )
+
+    found_cp = any(
+        re.search(pattern, full_text)
+        for pattern in cp_patterns
+    )
+
+    found_poly = any(
+        re.search(pattern, full_text)
+        for pattern in poly_patterns
+    )
 
     return found_mvp, found_poly, found_cp
 
@@ -176,7 +218,7 @@ for rep_file, coverm_file, orf_file in zip(
             found_poly = found_poly or poly
             found_cp = found_cp or cp
 
-            if found_mvp and found_poly:
+            if found_mvp and found_poly and found_cp:
                 break
 
 
