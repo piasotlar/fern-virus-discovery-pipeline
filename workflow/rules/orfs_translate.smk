@@ -9,8 +9,13 @@ rule translate_orfs:
         "../logs/translate/{sample}.log"
     shell:
         """
-        transeq \
-            -sequence {input.orfs} \
-            -outseq {output.proteins} \
-            > {log} 2>&1
+        if grep -q "^>" {input.orfs}; then
+            transeq \
+                -sequence {input.orfs} \
+                -outseq {output.proteins} \
+                > {log} 2>&1
+        else
+            touch {output.proteins}
+            echo "No ORFs to translate" > {log}
+        fi
         """
