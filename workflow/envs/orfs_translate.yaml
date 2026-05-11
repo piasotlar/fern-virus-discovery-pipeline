@@ -1,0 +1,6 @@
+name: orfs_translate 
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - emboss

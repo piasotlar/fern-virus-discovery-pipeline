@@ -48,15 +48,22 @@ include: "rules/mmseqs2_proteins_2.smk"
 include: "rules/table_orfs_2.smk"
 include: "rules/table.smk"
 
+#hmmer
+include: "rules/filter_orfs_hmmer.smk"
+include: "rules/orfs_translate.smk"
+include: "rules/hmmscan.smk"
+
 rule all:
     input:
         "../results/table_orfs.tsv",
 
         #expand("../results/{sample}/orfipy/orfs_no_hits.fa", sample=sample_names),
-        expand("../results/{sample}/{sample}_mmseqs2_top_hits_2.tsv", sample=sample_names)
+        expand("../results/{sample}/{sample}_mmseqs2_top_hits_2.tsv", sample=sample_names),
 
         "../results/table_orfs_2.tsv",
-        "../results/table.tsv"
+        "../results/table.tsv",
+
+        expand("../results/{sample}/{sample}_hmmscan.domtblout", sample=sample_names)
 
 
 
