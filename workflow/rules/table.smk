@@ -3,7 +3,8 @@ rule table:
         reps = expand("../results/{sample}/{sample}_representatives.tsv", sample=sample_names),                                                                                                       
         coverm = expand("../results/{sample}/{sample}_coverm.tsv", sample=sample_names),
         longest_orfs = expand("../results/{sample}/{sample}_longest_orfs_len.txt", sample=sample_names),
-        table_orfs= "../results/table_orfs_2.tsv"
+        table_orfs= "../results/table_orfs_2.tsv",
+        hmmer = expand("../results/{sample}/{sample}_hmmscan.tblout", sample=sample_names)
     output:
         table = "../results/table.tsv"
     conda:

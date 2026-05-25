@@ -6,4 +6,5 @@ rule anicalc:
     params:
         blast_max_evalue = 1e-3
     conda: "../../envs/anicalc.yaml"
+    log: "../logs/clustering/anicalc/{sample}.log"
     script: "../../scripts/anicalc.py"

@@ -11,4 +11,5 @@ rule aniclust:
         min_ani=0.0
 
     conda: "../../envs/aniclust.yaml" 
+    log: "../logs/clustering/aniclust/{sample}.log"
     script: "../../scripts/aniclust.py"

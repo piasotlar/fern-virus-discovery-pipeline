@@ -139,20 +139,88 @@ def get_taxonomy(taxonomy_list):
 
     return realm,kingdom, phylum, class_, order, family, genus, species
 
+def clean_hmmer_target(target):
+
+    target = str(target)
+    target = target.replace("sequence_", "")
+    target = target.replace(".aln", "")
+
+    return target
+
+def query_to_contig(query_name):
+    m = re.match(r"(NODE_\d+)_", str(query_name))
+    if m:
+        return m.group(1)
+    return None
+
+def query_to_orf(query_name):
+    m = re.search(r"(ORF\.\d+)", str(query_name))
+    if m:
+        return m.group(1)
+    return None
+
+def parse_hmmer_tblout(hmmer_file):
+
+    rows = []
+    with open(hmmer_file) as f:
+        for line in f:
+            if line.startswith("#") or not line.strip():
+                continue
+
+            parts = line.strip().split()
+            target_name = parts[0]
+            full_query_name = parts[2]
+            contig = query_to_contig(full_query_name)
+            query_name = query_to_orf(full_query_name)
+            evalue = float(parts[7])
+            score = float(parts[8])
+
+            rows.append({
+
+                "CONTIG NAME": contig,
+                "HMMER_MP_TARGET": clean_hmmer_target(target_name),
+                "HMMER_MP_EVALUE": evalue,
+                "HMMER_MP_SCORE": score,
+                "HMMER_MP_QUERY": query_name
+
+            })
+
+    if not rows:
+
+        return pd.DataFrame(columns=[
+            "CONTIG NAME",
+            "HMMER_MP_HIT",
+            "HMMER_MP_TARGET",
+            "HMMER_MP_EVALUE",
+            "HMMER_MP_SCORE",
+            "HMMER_MP_QUERY"
+        ])
+
+    df = pd.DataFrame(rows)
+
+    # za vsak contig vzemi najboljši HMMER zadetek z najmanjšim E-value
+
+    df = df.sort_values(["CONTIG NAME", "HMMER_MP_EVALUE", "HMMER_MP_SCORE"],ascending=[True, True, False])
+    df_best = df.groupby("CONTIG NAME", as_index=False).first()
+    df_best["HMMER_MP_HIT"] = "Yes"
+    return df_best
+
 table_orfs = snakemake.input.table_orfs
 df_table_orfs = pd.read_csv(table_orfs, sep="\t", header=0)
 contigs = []
-for rep_file, coverm_file, orf_file in zip(
+for rep_file, coverm_file, orf_file, hmmer_file in zip(
     snakemake.input.reps,
     snakemake.input.coverm,
     snakemake.input.longest_orfs,
+    snakemake.input.hmmer
 ):
     
     sample_name = rep_file.split("/")[-2]
 
     df_rep = pd.read_csv(rep_file, sep="\t", header=None)
     df_coverm = pd.read_csv(coverm_file, sep="\t", header=0)
-    df_orfs = pd.read_csv(orf_file, sep="\t", header=0)
+    df_orfs = pd.read_csv(orf_file, sep="\t", header=0)  
+    df_hmmer = parse_hmmer_tblout(hmmer_file)
     
     df_table_sample = df_table_orfs[df_table_orfs["sample"] == sample_name].copy()
 
@@ -221,6 +289,20 @@ for rep_file, coverm_file, orf_file in zip(
             if found_mvp and found_poly and found_cp:
                 break
 
+        hmmer_row = df_hmmer[df_hmmer["CONTIG NAME"] == name]
+
+        if not hmmer_row.empty:
+            hmmer_hit = hmmer_row.iloc[0]["HMMER_MP_HIT"]
+            hmmer_target = hmmer_row.iloc[0]["HMMER_MP_TARGET"]
+            hmmer_evalue = hmmer_row.iloc[0]["HMMER_MP_EVALUE"]
+            hmmer_score = hmmer_row.iloc[0]["HMMER_MP_SCORE"]
+            hmmer_query = hmmer_row.iloc[0]["HMMER_MP_QUERY"]
+        else:
+            hmmer_hit = "No"
+            hmmer_target = ""
+            hmmer_evalue = ""
+            hmmer_score = ""
+            hmmer_query = ""
 
         contig = {
             "SAMPLE": sample_name,
@@ -242,7 +324,12 @@ for rep_file, coverm_file, orf_file in zip(
             "NUM OF ORFS": num_of_orfs,
             "MVP": found_mvp,
             "CP": found_cp,
-            "POLYPROTEIN": found_poly
+            "POLYPROTEIN": found_poly,
+            "HMMER_MP_HIT": hmmer_hit,
+            "HMMER_MP_TARGET": hmmer_target,
+            "HMMER_MP_EVALUE": hmmer_evalue,
+            "HMMER_MP_SCORE": hmmer_score,
+            "HMMER_MP_QUERY": hmmer_query
         }
         contigs.append(contig)
 

@@ -46,12 +46,13 @@ include: "rules/mmseqs2_proteins_2.smk"
 
 #table of ORFs with mmseqs2 results for ORFs with no hits
 include: "rules/table_orfs_2.smk"
-include: "rules/table.smk"
 
 #hmmer
-include: "rules/filter_orfs_hmmer.smk"
+include: "rules/filter_orfs_hmmer.smk" #ne rabimo če bomo dali vse orfe (če rabimo popravi za prazne fasta)
 include: "rules/orfs_translate.smk"
 include: "rules/hmmscan.smk"
+
+include: "rules/table.smk"
 
 rule all:
     input:

@@ -14,16 +14,20 @@ rule find_orfs:
         "../envs/find_orfs.yaml"
     shell:
         """
-        orfipy {input.reps} \
-            --single-mode \
-            --outdir {params.outdir} \
-            --bed {params.bed_prefix} \
-            --min 50 \
-            --partial-3 \
-            --partial-5 \
-            --longest \
-            --dna {params.dna_prefix} \
-            > {log} 2>&1
+        if grep -q "^>" {input.reps}; then
+            orfipy {input.reps} \
+                --single-mode \
+                --outdir {params.outdir} \
+                --bed {params.bed_prefix} \
+                --min 50 \
+                --partial-3 \
+                --partial-5 \
+                --longest \
+                --dna {params.dna_prefix}
+        else
+            touch {output.orfs}
+            touch {output.bed}
+            echo "No representatives; skipping orfipy"
+        fi > {log} 2>&1
         """
-
-        
+            

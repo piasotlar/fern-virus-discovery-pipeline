@@ -11,4 +11,5 @@ rule get_cluster_representatives:
         max_length = 25000
     conda:
         "../../envs/reps.yaml"
+    log: "../logs/clustering/reps/{sample}.log"
     script: "../../scripts/get_cluster_representatives.py"

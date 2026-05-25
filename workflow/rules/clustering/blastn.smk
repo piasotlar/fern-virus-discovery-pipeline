@@ -13,8 +13,13 @@ rule blastn:
         "../logs/clustering/blastn/{sample}.log"
     shell:
         """
-        blastn -task megablast -max_target_seqs 25000 -perc_identity {params.min_blast_ident} \
-        -outfmt "6 qseqid sseqid pident length qstart qend sstart send evalue qlen slen" \
-        -num_threads {threads} -query {input.virus_contigs} -db {input.blast_db}/blastdb -out {output.blast_tsv} \
-        > {log} 2>&1
+        if grep -q "^>" {input.virus_contigs}; then
+
+            blastn -task megablast -max_target_seqs 25000 -perc_identity {params.min_blast_ident} \
+            -outfmt "6 qseqid sseqid pident length qstart qend sstart send evalue qlen slen" \
+            -num_threads {threads} -query {input.virus_contigs} -db {input.blast_db}/blastdb -out {output.blast_tsv}
+        else
+            touch {output.blast_tsv}
+            echo "No viral contigs; skipping blastn"
+        fi > {log} 2>&1
         """

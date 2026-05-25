@@ -13,13 +13,19 @@ rule hmmscan:
     threads: 4
     shell:
         """
-        hmmscan \
-            --cpu {threads} \
-            -o {output.txt} \
-            --tblout {output.tbl} \
-            --domtblout {output.domtbl} \
-            {input.hmm} \
-            {input.proteins} \
-            2> {log}
-
+        if grep -q "^>" {input.proteins}; then
+            hmmscan \
+                -o {output.txt} \
+                --tblout {output.tbl} \
+                --domtblout {output.domtbl} \
+                --cpu {threads} \
+                {input.hmm} \
+                {input.proteins} \
+                > {log} 2>&1
+        else
+            touch {output.txt}
+            touch {output.tbl}
+            touch {output.domtbl}
+            echo "No proteins for hmmscan" > {log}
+        fi
         """
