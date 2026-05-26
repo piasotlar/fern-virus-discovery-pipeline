@@ -6,7 +6,7 @@ rule translate_orfs:
     output:
         proteins="../results/{sample}/orfipy/proteins_hmmer.fa"
     conda:
-        "../../envs/orfs_translate.yaml"
+        "../envs/orfs_translate.yaml"
     log:
         "../logs/translate/{sample}.log"
     shell:

@@ -5,5 +5,6 @@ rule sort_blast:
     log: "../logs/clustering/sort_blast/{sample}.log"
     shell:
         """
-        csvtk sort -t -k 1 -k 2 -o {output} {input}
+        csvtk sort -t -k 1 -k 2 -o {output} {input} \
+            > {log} 2>&1
         """

@@ -5,6 +5,7 @@ from urllib.error import HTTPError, URLError
 from io import StringIO
 import time
 import re
+from pandas.errors import EmptyDataError
 
 Entrez.api_key = snakemake.config["ncbi_api_key"]
 Entrez.email = snakemake.config["ncbi_email"]
@@ -217,9 +218,30 @@ for rep_file, coverm_file, orf_file, hmmer_file in zip(
     
     sample_name = rep_file.split("/")[-2]
 
-    df_rep = pd.read_csv(rep_file, sep="\t", header=None)
-    df_coverm = pd.read_csv(coverm_file, sep="\t", header=0)
-    df_orfs = pd.read_csv(orf_file, sep="\t", header=0)  
+    try:
+        df_rep = pd.read_csv(rep_file, sep="\t", header=None)
+    except EmptyDataError:
+        continue
+
+    if df_rep.empty:
+        continue
+
+    try:
+        df_coverm = pd.read_csv(coverm_file, sep="\t", header=0)
+    except EmptyDataError:
+        df_coverm = pd.DataFrame(columns=[
+            "Contig",
+            f"{sample_name}_aln_sorted Mean",
+            f"{sample_name}_aln_sorted RPKM",
+            f"{sample_name}_aln_sorted Read Count"
+        ])
+
+    try:
+        df_orfs = pd.read_csv(orf_file, sep="\t", header=0)
+    except EmptyDataError:
+        df_orfs = pd.DataFrame(columns=[
+            "ORF_ID", "contig_len", "orf_len", "orf_perc"
+        ]) 
     df_hmmer = parse_hmmer_tblout(hmmer_file)
     
     df_table_sample = df_table_orfs[df_table_orfs["sample"] == sample_name].copy()
@@ -335,6 +357,3 @@ for rep_file, coverm_file, orf_file, hmmer_file in zip(
 
 df_final = pd.DataFrame(contigs)
 df_final.to_csv(snakemake.output.table, sep="\t", index=False)
-
-
-

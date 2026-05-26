@@ -7,7 +7,7 @@ rule hmmscan:
         tbl="../results/{sample}/{sample}_hmmscan.tblout",
         domtbl="../results/{sample}/{sample}_hmmscan.domtblout"
     conda:
-        "../../envs/hmmer.yaml"
+        "../envs/hmmer.yaml"
     log:
         "../logs/hmmer/hmmscan/{sample}.log"
     threads: 4

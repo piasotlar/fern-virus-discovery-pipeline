@@ -9,11 +9,16 @@ rule make_blast_db:
         "../logs/clustering/makeblastdb/{sample}.log"
     shell:
         """
+        mkdir -p {output.db}
 
         if grep -q "^>" {input.virus_contigs}; then
-            makeblastdb -dbtype nucl -in {input.virus_contigs} -out {output.db}/blastdb \
-            > {log} 2>&1
+            makeblastdb \
+                -dbtype nucl \
+                -in {input.virus_contigs} \
+                -out {output.db}/blastdb \
+                > {log} 2>&1
         else
-            echo "No viral contigs; skipping makeblastdb"
-        fi > {log} 2>&1
+            echo "No viral contigs; skipping makeblastdb" \
+                > {log} 2>&1
+        fi
         """

@@ -27,7 +27,7 @@ include: "rules/clustering/reps.smk"
 
 #mapping
 include: "rules/mapping/bwa.smk"
-include: "rules/mapping/coverm.smk"
+include: "rules/mapping/coverm.smk" #check for empty files
 
 #orfipy
 include: "rules/find_orfs.smk"
@@ -44,11 +44,15 @@ include: "rules/table_orfs.smk"
 include: "rules/filter_orfs_fasta.smk"
 include: "rules/mmseqs2_proteins_2.smk"
 
+#ensure that pipline wont crash because of missing files
+#If everything is correct this is not needed 
+include: "rules/empty_files.smk"
+
 #table of ORFs with mmseqs2 results for ORFs with no hits
 include: "rules/table_orfs_2.smk"
 
 #hmmer
-include: "rules/filter_orfs_hmmer.smk" #ne rabimo če bomo dali vse orfe (če rabimo popravi za prazne fasta)
+#include: "rules/filter_orfs_hmmer.smk" 
 include: "rules/orfs_translate.smk"
 include: "rules/hmmscan.smk"
 
