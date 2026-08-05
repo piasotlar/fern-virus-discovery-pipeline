@@ -14,5 +14,4 @@ rule to_tsv:
     shell:
         """
         mmseqs createtsv {params.query} {params.result} {output.tsv_result} &>> {log}
-        
         """

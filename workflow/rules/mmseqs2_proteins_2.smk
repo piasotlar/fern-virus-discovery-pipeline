@@ -1,4 +1,3 @@
-
 rule mmseqs2_proteins_2:
     input:
         orfs = "../results/{sample}/orfipy/orfs_no_hits.fa",

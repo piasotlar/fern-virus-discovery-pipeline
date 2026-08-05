@@ -20,5 +20,3 @@ rule gzip_fastq:
         gzip -c {input.r2} > {output.r2_gz} 2>> {log}
         rm {input.r1} {input.r2}
         """
-
-    

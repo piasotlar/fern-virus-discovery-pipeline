@@ -1,7 +1,7 @@
 rule mmseqs2_proteins:
     input:
         orfs = "../results/{sample}/orfipy/orfs.fa",
-        seqTaxDB = "/biodbs/mmseqs2/nr_database/nr.fnaDB" #spremeni bazo
+        viralTaxDB = "/DKHF/scratch/lanav/fern-virus-discovery-pipeline/databases/viral.fnaDB"
     output:
         tsv = "../results/{sample}/{sample}_mmseqs2_top_hits.tsv"
     params:
@@ -20,8 +20,8 @@ rule mmseqs2_proteins:
         if grep -q "^>" {input.orfs}; then
 
             mmseqs createdb {input.orfs} {params.query_db} >> {log} 2>&1
-            mmseqs search {params.query_db} {input.seqTaxDB} {params.result_db} {params.tmp_dir} --threads {threads} >> {log} 2>&1
-            mmseqs convertalis {params.query_db} {input.seqTaxDB} {params.result_db} {output.tsv} --format-output "query,target,theader,evalue,pident,qlen,tlen,alnlen,bits,taxlineage" >> {log} 2>&1
+            mmseqs search {params.query_db} {input.viralTaxDB} {params.result_db} {params.tmp_dir} --threads {threads} >> {log} 2>&1
+            mmseqs convertalis {params.query_db} {input.viralTaxDB} {params.result_db} {output.tsv} --format-output "query,target,theader,evalue,pident,qlen,tlen,alnlen,bits,taxlineage" >> {log} 2>&1
 
         else
             touch {output.tsv}
