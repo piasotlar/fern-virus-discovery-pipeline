@@ -1,6 +1,3 @@
-#samples_tsv: "../config/sample_names.tsv"
-#samples_tsv: "../config/test_sample1.tsv"
-#samples_tsv: "../config/test_sample10.tsv"
 samples_tsv: "../config/reprezentative_samples.tsv"
-ncbi_email: "pia.sotli@gmail.com"
-ncbi_api_key: "a5b4487a22d64bedc996512e7b495df47608"
+ncbi_email: ""
+ncbi_api_key: ""
