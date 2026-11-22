@@ -1,4 +1,8 @@
-.snakemake
-results/**
-logs/**
-
+.snakemake/
+results/
+logs/
+workflow/dag.dot
+workflow/dag.png
+workflow/dag.pdf
+.DS_Store
+__pycache__/
