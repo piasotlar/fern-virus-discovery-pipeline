@@ -10,10 +10,12 @@ rule find_orfs:
         dna_prefix = "orfs.fa"
     log:
         "../logs/orfs_orfipy/{sample}.log"
-    conda: 
+    conda:
         "../envs/find_orfs.yaml"
     shell:
         """
+        mkdir -p {params.outdir}
+
         if grep -q "^>" {input.reps}; then
             orfipy {input.reps} \
                 --single-mode \
@@ -25,9 +27,9 @@ rule find_orfs:
                 --longest \
                 --dna {params.dna_prefix}
         else
-            touch {output.orfs}
-            touch {output.bed}
             echo "No representatives; skipping orfipy"
         fi > {log} 2>&1
+
+        [ -e {output.orfs} ] || touch {output.orfs}
+        [ -e {output.bed} ] || touch {output.bed}
         """
-            

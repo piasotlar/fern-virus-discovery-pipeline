@@ -2,7 +2,7 @@ rule translate_orfs:
     input:
         #orfs="../results/{sample}/orfipy/orfs_hmmer.fa"
         #if we want all orfs:
-        orfs="../results/{sample}/orfipy/orfs_for_translate.fa"
+        orfs="../results/{sample}/orfipy/orfs.fa"
     output:
         proteins="../results/{sample}/orfipy/proteins_hmmer.fa"
     conda:

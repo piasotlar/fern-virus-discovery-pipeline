@@ -25,6 +25,8 @@ rule coverm:
           --min-read-aligned-percent {params.min_aln} \
           --exclude-supplementary \
           --output-file {output.tsv_file} >> {log} 2>&1
+
+        [ -e {output.tsv_file} ] || touch {output.tsv_file}
         """
 
 """

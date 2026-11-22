@@ -44,4 +44,5 @@ rule mmseqs2_proteins_2:
             echo "No ORFs without hits for MMseqs2 search" > {log}
 
         fi
+        [ -e {output.tsv} ] || touch {output.tsv}
         """

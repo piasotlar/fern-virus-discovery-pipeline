@@ -27,4 +27,6 @@ rule mmseqs2_proteins:
             touch {output.tsv}
             echo "No ORFs for MMseqs2 search" > {log}
         fi
+        
+        [ -e {output.tsv} ] || touch {output.tsv}
         """

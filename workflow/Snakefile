@@ -44,9 +44,6 @@ include: "rules/table_orfs.smk"
 include: "rules/filter_orfs_fasta.smk"
 include: "rules/mmseqs2_proteins_2.smk"
 
-#to check for empty files
-include: "rules/ensure_orfs_for_translate.smk"
-
 #table of ORFs with mmseqs2 results for ORFs with no hits
 include: "rules/table_orfs_2.smk"
 
